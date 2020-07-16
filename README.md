@@ -1,2 +1,2 @@
-# twitter-clone
-Yet another twitter clone
+# tweeter
+Yet another twitter clone.
