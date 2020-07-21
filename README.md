@@ -1,2 +1,2 @@
-# tweeter
-Yet another twitter clone.
+# socialish
+Yet another social media.
