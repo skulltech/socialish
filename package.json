@@ -1,0 +1,22 @@
+{
+  "name": "socialish",
+  "version": "1.0.0",
+  "description": "Yet another social media",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SkullTech/socialish.git"
+  },
+  "author": "Sumit Ghosh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SkullTech/socialish/issues"
+  },
+  "homepage": "https://github.com/SkullTech/socialish#readme",
+  "dependencies": {
+    "serverless-dynamodb-local": "^0.2.39"
+  }
+}

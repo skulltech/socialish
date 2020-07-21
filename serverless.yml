@@ -1,0 +1,132 @@
+service: socialish
+
+plugins:
+  - serverless-dynamodb-local
+
+custom:
+  usersTableName: ${self:service}-users-${self:provider.stage}
+  postsTableName: ${self:service}-posts-${self:provider.stage}
+  commentsTableName: ${self:service}-comments-${self:provider.stage}
+  dynamodb:
+    start:
+      migrate: true
+    stages:
+      - dev
+
+provider:
+  name: aws
+  runtime: python3.8
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'ap-south-1'}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:Query
+        - dynamodb:Scan
+      Resource:
+        - Fn::GetAtt:
+            - UsersDynamoDBTable
+            - Arn
+        - Fn::Join:
+            - ''
+            - - Fn::GetAtt:
+                  - UsersDynamoDBTable
+                  - Arn
+              - '/index/*'
+        - Fn::GetAtt:
+            - PostsDynamoDBTable
+            - Arn
+        - Fn::Join:
+            - ''
+            - - Fn::GetAtt:
+                  - PostsDynamoDBTable
+                  - Arn
+              - '/index/*'
+        - Fn::GetAtt:
+            - CommentsDynamoDBTable
+            - Arn
+        - Fn::Join:
+            - ''
+            - - Fn::GetAtt:
+                  - CommentsDynamoDBTable
+                  - Arn
+              - '/index/*'
+
+  environment:
+    USERS_TABLE: ${self:custom.usersTableName}
+    POSTS_TABLE: ${self:custom.postsTableName}
+    COMMENTS_TABLE: ${self:custom.commentsTableName}
+
+functions:
+  app:
+    handler: app.handler
+    events:
+      - httpApi: '*'
+    memorySize: 256
+
+resources:
+  Resources:
+    UsersDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.usersTableName}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: username
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: usernameIndex
+            KeySchema:
+              - AttributeName: username
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+    PostsDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.postsTableName}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: user
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: userIndex
+            KeySchema:
+              - AttributeName: user
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+    CommentsDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.commentsTableName}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: parent
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: parentIndex
+            KeySchema:
+              - AttributeName: parent
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
