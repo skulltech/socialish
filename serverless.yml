@@ -76,12 +76,12 @@ resources:
         TableName: ${self:custom.usersTableName}
         BillingMode: PAY_PER_REQUEST
         AttributeDefinitions:
-          - AttributeName: id
+          - AttributeName: user_id
             AttributeType: S
           - AttributeName: username
             AttributeType: S
         KeySchema:
-          - AttributeName: id
+          - AttributeName: user_id
             KeyType: HASH
         GlobalSecondaryIndexes:
           - IndexName: usernameIndex
@@ -96,12 +96,12 @@ resources:
         TableName: ${self:custom.postsTableName}
         BillingMode: PAY_PER_REQUEST
         AttributeDefinitions:
-          - AttributeName: id
+          - AttributeName: post_id
             AttributeType: S
           - AttributeName: user
             AttributeType: S
         KeySchema:
-          - AttributeName: id
+          - AttributeName: post_id
             KeyType: HASH
         GlobalSecondaryIndexes:
           - IndexName: userIndex
@@ -116,12 +116,12 @@ resources:
         TableName: ${self:custom.commentsTableName}
         BillingMode: PAY_PER_REQUEST
         AttributeDefinitions:
-          - AttributeName: id
+          - AttributeName: comment_id
             AttributeType: S
           - AttributeName: parent
             AttributeType: S
         KeySchema:
-          - AttributeName: id
+          - AttributeName: comment_id
             KeyType: HASH
         GlobalSecondaryIndexes:
           - IndexName: parentIndex

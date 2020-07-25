@@ -6,7 +6,7 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from passlib.context import CryptContext
 
-from models import get_user_by_username
+import models
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
 SECRET_KEY = '2645df01df6aa8121a64520150378d8492c2177d4265b6d8e8f3f5dd6fda4473'
@@ -35,7 +35,7 @@ def get_password_hash(password):
 
 
 def authenticate_user(username: str, password: str):
-    user = get_user_by_username(username)
+    user = models.get_user_by_username(username)
     if not user:
         return False
     if not verify_password(password, user.hashed_password):
@@ -67,7 +67,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
             raise credentials_exception
     except JWTError:
         raise credentials_exception
-    user = get_user_by_username(username=username)
+    user = models.get_user_by_username(username=username)
     if user is None:
         raise credentials_exception
     return user
