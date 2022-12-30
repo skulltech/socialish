@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/SkullTech/socialish#readme",
   "dependencies": {
-    "serverless-dynamodb-local": "^0.2.39"
+    "serverless-dynamodb-local": "^1.0.2"
   }
 }
